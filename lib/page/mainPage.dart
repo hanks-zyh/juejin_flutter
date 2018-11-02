@@ -98,8 +98,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
   Widget getBottomIcon(var index) {
     return Expanded(
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
-            highlightColor: Colors.transparent,
             onTap: () {
               setState(() {
                 _tabIndex = index;

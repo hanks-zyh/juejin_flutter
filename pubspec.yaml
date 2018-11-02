@@ -52,6 +52,7 @@ flutter:
   - assets/tab_profile_normal.png
   - assets/timeline_comment.png
   - assets/timeline_like_normal.png
+  - assets/profile_arrow.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

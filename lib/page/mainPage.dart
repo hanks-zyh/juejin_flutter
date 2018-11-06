@@ -89,7 +89,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     _pageList = [
       new HomePage(),
       new HomePage(),
-      new ExplorePage(title:"发现"),
+      new ExplorePage(),
       new HomePage(),
       new UserPage(),
     ];

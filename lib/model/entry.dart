@@ -24,6 +24,7 @@ class Entry {
   String title;
   String content;
   String originalUrl;
+  String screenshot;
   String type;
   String createdAt;
   User user;
@@ -39,6 +40,7 @@ class Entry {
     entry.originalUrl = json['originalUrl'];
     entry.type = json['type'];
     entry.createdAt = json['createdAt'];
+    entry.screenshot = json['screenshot'];
     entry.commentsCount = json['commentsCount'];
     entry.collectionCount = json['collectionCount'];
 

@@ -7,6 +7,7 @@ import 'package:juejin_flutter/config/config_color.dart';
 import 'package:juejin_flutter/page/explorePage.dart';
 import 'package:juejin_flutter/page/homePage.dart';
 import 'package:juejin_flutter/page/userPage.dart';
+import 'package:juejin_flutter/page/xiaocePage.dart';
 
 class MainPage extends StatefulWidget {
   static const String routeName = '/page/main';
@@ -90,7 +91,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       new HomePage(),
       new HomePage(),
       new ExplorePage(),
-      new HomePage(),
+      new XiaocePage(),
       new UserPage(),
     ];
   }

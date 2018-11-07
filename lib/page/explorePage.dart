@@ -95,8 +95,13 @@ class _ExplorePageState extends State<ExplorePage> {
               } else if (index == items.length) {
                 return _buildProgressIndicator();
               } else {
-                final item = items[index - 1];
-                return getItemView(item);
+                var i = index - 1;
+                if(i>=0 && i < items.length){
+                  final item = items[i];
+                  return getItemView(item);
+                }else{
+                  return _buildProgressIndicator();
+                }
               }
             },
             controller: _scrollController,
@@ -136,9 +141,111 @@ class _ExplorePageState extends State<ExplorePage> {
       new Model(
           imgUrl: 'http://uploads.5068.com/allimg/1711/151-1G130093R1.jpg'),
     ];
-    return BannerWidget(
-      data: data,
-      curve: ElasticInOutCurve(),
+    return Column(
+      children: <Widget>[
+        BannerWidget(
+          data: data,
+          curve: ElasticInOutCurve(),
+        ),
+        Container(
+          height: 84.0,
+          color: ConfigColor.colorContentBackground,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                  child: FlatButton(
+                      onPressed: () => {},
+                      padding: EdgeInsets.only(top: 16.0),
+                      child: Column(
+                        children: <Widget>[
+                          Icon(
+                            Icons.whatshot,
+                            color: Color(0xFFFF5E35),
+                            size: 36.0,
+                          ),
+                          Text(
+                            "本周最热",
+                            style: TextStyle(
+                              color: ConfigColor.colorText1,
+                              fontSize: 12.0,
+                            ),
+                          )
+                        ],
+                      ))),
+              Expanded(
+                  child: FlatButton(
+                      padding: EdgeInsets.only(top: 16.0),
+                      onPressed: () => {},
+                      child: Column(
+                        children: <Widget>[
+                          Icon(Icons.confirmation_number,
+                              color: Color(0xFF18C09A), size: 36.0),
+                          Text(
+                            "收藏集合",
+                            style: TextStyle(
+                                color: ConfigColor.colorText1, fontSize: 12.0),
+                          )
+                        ],
+                      ))),
+              Expanded(
+                  child: FlatButton(
+                      padding: EdgeInsets.only(top: 16.0),
+                      onPressed: () => {},
+                      child: Column(
+                        children: <Widget>[
+                          Icon(Icons.notifications,
+                              color: Color(0xFFFFCC00), size: 36.0),
+                          Text(
+                            "活动",
+                            style: TextStyle(
+                                color: ConfigColor.colorText1, fontSize: 12.0),
+                          )
+                        ],
+                      ))),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 8.0),
+          padding: EdgeInsets.only(left: 16.0, right: 8.0),
+          height: 40.0,
+          color: ConfigColor.colorContentBackground,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                child: Icon(
+                  Icons.whatshot,
+                  color: Color(0xFFFF5E35),
+                  size: 16.0,
+                ),
+                margin: EdgeInsets.only(right: 8.0),
+              ),
+              Expanded(
+                  child: Text(
+                "本周最热",
+                style: TextStyle(
+                  color: ConfigColor.colorText1,
+                  fontSize: 13.0,
+                ),
+              )),
+              Row(
+                children: <Widget>[
+                  Icon(Icons.settings, color: Colors.black26, size: 16.0),
+                  Container(
+                    child: Text(
+                      "定制热门",
+                      style: TextStyle(
+                          color: ConfigColor.colorText2, fontSize: 12.0),
+                    ),
+                    margin: EdgeInsets.only(left: 4.0, right: 8.0),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -150,29 +257,27 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget getItemView(Entry entry) {
     return Container(
-        height: 100.0,
-        margin: EdgeInsets.only(top: 10.0),
-        padding: EdgeInsets.only(top: 16.0, right: 16.0, bottom: 16.0, left: 16.0),
+        padding:
+            EdgeInsets.only(top: 16.0, right: 16.0, bottom: 16.0, left: 16.0),
         decoration: BoxDecoration(
-            color: ConfigColor.colorContentBackground,
-            boxShadow: [
-              new BoxShadow(
-                  color: Color(0x18000000),
-                  blurRadius: 1.0,
-                  offset: Offset(0.0, 0.5))
-            ]),
+          color: ConfigColor.colorContentBackground,
+          border: Border(
+              top: BorderSide(color: ConfigColor.colorDivider, width: 0.5)),
+        ),
         child: Row(children: <Widget>[
-          Expanded(child: Column(
+          Expanded(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
+                padding: EdgeInsets.only(right: 16.0),
                 child: Text(
                   entry.title.toUpperCase(),
                   maxLines: 2,
                   textAlign: TextAlign.left,
                   style: TextStyle(
                       fontSize: 14.0,
-                      height: 1.2,
+                      height: 1.1,
                       color: ConfigColor.colorText1),
                 ),
               ),
@@ -187,15 +292,17 @@ class _ExplorePageState extends State<ExplorePage> {
               ),
             ],
           )),
-          Container(
-            height: 60.0,
-            width: 60.0,
-            color: Colors.black38,
-            child: Image.network(entry.screenshot == null ? "http://ww1.sinaimg.cn/large/8c9b876fly1fwy7sudnjhj201f00q04c.jpg" : entry
-                .screenshot,
-                fit: BoxFit.cover),
-          )
+          getScreenshotWidget(entry.screenshot)
         ]));
+  }
+
+  Widget getScreenshotWidget(String url){
+    if(url == null || url.isEmpty) return Container();
+    return Container(
+      height: 60.0,
+      width: 60.0,
+      child: Image.network(url, fit: BoxFit.cover),
+    );
   }
 
   Future<Null> _onRefresh() async {

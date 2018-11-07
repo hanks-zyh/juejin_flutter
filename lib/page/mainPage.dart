@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:juejin_flutter/config/config_color.dart';
 import 'package:juejin_flutter/page/explorePage.dart';
 import 'package:juejin_flutter/page/homePage.dart';
+import 'package:juejin_flutter/page/pinPage.dart';
 import 'package:juejin_flutter/page/userPage.dart';
 import 'package:juejin_flutter/page/xiaocePage.dart';
 
@@ -89,7 +90,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
      */
     _pageList = [
       new HomePage(),
-      new HomePage(),
+      new PinPage(),
       new ExplorePage(),
       new XiaocePage(),
       new UserPage(),

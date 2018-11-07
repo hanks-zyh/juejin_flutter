@@ -1,21 +1,5 @@
-
-class User {
-  String avatarLarge;
-  String username;
-  String jobTitle;
-  String company;
-  String objectId;
-
-  User();
-}
-
-class Category {
-  String id;
-  String name;
-  String title;
-
-  Category();
-}
+import 'package:juejin_flutter/model/category.dart';
+import 'package:juejin_flutter/model/user.dart';
 
 class Entry {
   int commentsCount;

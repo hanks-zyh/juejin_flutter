@@ -1,5 +1,5 @@
 
-import 'package:juejin_flutter/model/entry.dart';
+import 'package:juejin_flutter/model/user.dart';
 
 class Xiaoce {
   int buyCount;

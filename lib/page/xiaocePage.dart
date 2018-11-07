@@ -114,7 +114,7 @@ class _XiaocePageState extends State<XiaocePage> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: ConfigColor.colorWindowBackground,
                 boxShadow: [
                   new BoxShadow(color: Color(0x33000000), blurRadius: 4.0, offset: Offset(1.0, 1.0))
                 ]

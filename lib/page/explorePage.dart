@@ -88,11 +88,11 @@ class _ExplorePageState extends State<ExplorePage> {
         body: RefreshIndicator(
           onRefresh: _onRefresh,
           child: ListView.builder(
-            itemCount: items.length <= 0 ? 1 : items.length + 2,
+            itemCount: items.length <= 0 ? 0 : items.length + 2,
             itemBuilder: (context, index) {
               if (index == 0) {
                 return _buildExploreHeader();
-              } else if (index == items.length) {
+              } else if (index == items.length + 1) {
                 return _buildProgressIndicator();
               } else {
                 var i = index - 1;

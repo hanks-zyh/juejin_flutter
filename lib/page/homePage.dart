@@ -53,33 +53,55 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
+  var tabs = ['首页', 'Android', 'iOS'];
+
+  Widget getTabItemWidget(int index) {
+    return Container(
+      height: kToolbarHeight,
+      child: Center(child: Text(tabs[index], textAlign: TextAlign.center,),),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Home",
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Home"),
-          backgroundColor: ConfigColor.colorPrimary,
-          elevation: 1.0,
-        ),
-        body: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: ListView.builder(
-            itemCount: items.length <= 0 ? 0 : items.length + 1,
-            itemBuilder: (context, index) {
-              if (index == items.length) {
-                return _buildProgressIndicator();
-              } else {
-                final item = items[index];
-                return getItemView(item);
-              }
-            },
-            controller: _scrollController,
+        title: "Home",
+        home: DefaultTabController(
+          length: tabs.length,
+          child: Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Container(
+                child: TabBar(
+                  isScrollable: true,
+                  indicatorColor: ConfigColor.colorContentBackground,
+                  tabs: <Widget>[
+                    getTabItemWidget(0),
+                    getTabItemWidget(1),
+                    getTabItemWidget(2),
+                  ],
+                ),
+              ),
+              backgroundColor: ConfigColor.colorPrimary,
+              elevation: 1.0,
+            ),
+            body: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView.builder(
+                itemCount: items.length <= 0 ? 0 : items.length + 1,
+                itemBuilder: (context, index) {
+                  if (index == items.length) {
+                    return _buildProgressIndicator();
+                  } else {
+                    final item = items[index];
+                    return getItemView(item);
+                  }
+                },
+                controller: _scrollController,
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
   Widget _buildProgressIndicator() {
@@ -107,93 +129,101 @@ class _HomePageState extends State<HomePage> {
         margin: EdgeInsets.only(top: 10.0),
         padding: EdgeInsets.only(top: 16.0, right: 16.0, bottom: 4.0),
         decoration: BoxDecoration(
-          color: ConfigColor.colorContentBackground,
-          boxShadow: [
-            new BoxShadow(color: Color(0x18000000), blurRadius: 1.0, offset: Offset(0.0, 0.5))
-          ]
-        ),
-        child: Column(children: <Widget>[
-          Row(
+            color: ConfigColor.colorContentBackground,
+            boxShadow: [
+              new BoxShadow(
+                  color: Color(0x18000000),
+                  blurRadius: 1.0,
+                  offset: Offset(0.0, 0.5))
+            ]),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(left: 16.0),
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(entry.user.avatarLarge),
-                    backgroundColor: ConfigColor.colorWindowBackground,
+              Row(
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.only(left: 16.0),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(entry.user.avatarLarge),
+                        backgroundColor: ConfigColor.colorWindowBackground,
+                      ),
+                      width: 24.0,
+                      height: 24.0),
+                  Expanded(
+                    child: Container(
+                      child: Text(
+                        entry.user.username,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 12.0, color: ConfigColor.colorText1),
+                      ),
+                      margin: EdgeInsets.only(left: 8.0),
+                    ),
                   ),
-                  width: 24.0,
-                  height: 24.0),
+                  getTagWidget(entry),
+                ],
+              ),
               Container(
                 child: Text(
-                  entry.user.username,
-                  maxLines: 1,
-                  style:
-                      TextStyle(fontSize: 12.0, color: ConfigColor.colorText1),
+                  entry.title.toUpperCase(),
+                  maxLines: 2,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                      color: ConfigColor.colorText1),
                 ),
-                margin: EdgeInsets.only(left: 8.0),
+                padding: EdgeInsets.only(top: 8.0, left: 16.0),
+              ),
+              Container(
+                child: Text(
+                  entry.content.trim(),
+                  maxLines: 3,
+                  style: TextStyle(
+                      fontSize: 12.0,
+                      color: ConfigColor.colorText2,
+                      height: 1.2),
+                ),
+                padding: EdgeInsets.only(top: 4.0, left: 16.0),
+              ),
+              Container(
+                child: Row(children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(right: 4.0, left: 16.0),
+                        child: Image.asset("assets/timeline_like_normal.png",
+                            width: 16.0, height: 16.0),
+                      ),
+                      Container(
+                        child: Text(
+                          "${entry.collectionCount}",
+                          style: TextStyle(
+                              fontSize: 12.0, color: ConfigColor.colorText3),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(right: 4.0, left: 16.0),
+                        child: Image.asset("assets/timeline_comment.png",
+                            width: 16.0, height: 16.0),
+                      ),
+                      Container(
+                        child: Text(
+                          "${entry.commentsCount}",
+                          style: TextStyle(
+                              fontSize: 12.0, color: ConfigColor.colorText3),
+                        ),
+                      ),
+                    ],
+                  ),
+                ]),
+                height: 40.0,
               )
-            ],
-          ),
-          Container(
-            child: Text(
-              entry.title.toUpperCase(),
-              maxLines: 2,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.bold,
-                  color: ConfigColor.colorText1),
-            ),
-            width: double.infinity,
-            padding: EdgeInsets.only(top: 8.0, left: 16.0),
-          ),
-          Container(
-            child: Text(
-              entry.content.trim(),
-              maxLines: 3,
-              style: TextStyle(
-                  fontSize: 12.0, color: ConfigColor.colorText2, height: 1.3),
-            ),
-            padding: EdgeInsets.only(top: 4.0, left: 16.0),
-          ),
-          Container(
-            child: Row(children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: 4.0, left: 16.0),
-                    child: Image.asset("assets/timeline_like_normal.png",
-                        width: 16.0, height: 16.0),
-                  ),
-                  Container(
-                    child: Text(
-                      "${entry.collectionCount}",
-                      style: TextStyle(
-                          fontSize: 12.0, color: ConfigColor.colorText3),
-                    ),
-                  ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Container(
-                    padding: EdgeInsets.only(right: 4.0, left: 16.0),
-                    child: Image.asset("assets/timeline_comment.png",
-                        width: 16.0, height: 16.0),
-                  ),
-                  Container(
-                    child: Text(
-                      "${entry.commentsCount}",
-                      style: TextStyle(
-                          fontSize: 12.0, color: ConfigColor.colorText3),
-                    ),
-                  ),
-                ],
-              ),
-            ]),
-            height: 40.0,
-          )
-        ]));
+            ]));
   }
 
   Future<Null> _onRefresh() async {
@@ -214,4 +244,27 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
+}
+
+Widget getTagWidget(Entry entry) {
+  if (entry == null || entry.tags == null || entry.tags.isEmpty) {
+    return Container(
+      child: Text("nn"),
+    );
+  }
+
+  var text = entry.tags[0].title;
+  if (entry.tags.length > 1) {
+    text += " / ${entry.tags[1].title}";
+  }
+
+  return Container(
+    child: Text(
+      text,
+      style: TextStyle(
+        color: ConfigColor.colorText3,
+        fontSize: 12.0,
+      ),
+    ),
+  );
 }

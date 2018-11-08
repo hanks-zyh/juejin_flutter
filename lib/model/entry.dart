@@ -1,4 +1,5 @@
 import 'package:juejin_flutter/model/category.dart';
+import 'package:juejin_flutter/model/tag.dart';
 import 'package:juejin_flutter/model/user.dart';
 
 class Entry {
@@ -13,6 +14,7 @@ class Entry {
   String createdAt;
   User user;
   Category category;
+  List<Tag> tags;
 
   Entry();
 
@@ -44,6 +46,11 @@ class Entry {
     category.title = categoryJson['title'];
 
     entry.category = category;
+    entry.tags = List<Tag>();
+    for(var tagJson in json['tags']){
+      entry.tags.add(Tag.formJson(tagJson));
+    }
+
     return entry;
   }
 }

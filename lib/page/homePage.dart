@@ -58,47 +58,68 @@ class _HomePageState extends State<HomePage> {
   Widget getTabItemWidget(int index) {
     return Container(
       height: kToolbarHeight,
-      child: Center(child: Text(tabs[index], textAlign: TextAlign.center,),),
+      child: Center(
+        child: Text(
+          tabs[index],
+          textAlign: TextAlign.center,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var tabHeight = 40.0 + statusBarHeight;
     return MaterialApp(
         title: "Home",
         home: DefaultTabController(
           length: tabs.length,
           child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              title: Container(
-                child: TabBar(
-                  isScrollable: true,
-                  indicatorColor: ConfigColor.colorContentBackground,
-                  tabs: <Widget>[
-                    getTabItemWidget(0),
-                    getTabItemWidget(1),
-                    getTabItemWidget(2),
-                  ],
+            body: Stack(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: tabHeight - 13.0),
+                  child: RefreshIndicator(
+                    onRefresh: _onRefresh,
+                    child: ListView.builder(
+                      itemCount: items.length <= 0 ? 0 : items.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == items.length) {
+                          return _buildProgressIndicator();
+                        } else {
+                          final item = items[index];
+                          return getItemView(item);
+                        }
+                      },
+                      controller: _scrollController,
+                    ),
+                  ),
                 ),
-              ),
-              backgroundColor: ConfigColor.colorPrimary,
-              elevation: 1.0,
-            ),
-            body: RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: ListView.builder(
-                itemCount: items.length <= 0 ? 0 : items.length + 1,
-                itemBuilder: (context, index) {
-                  if (index == items.length) {
-                    return _buildProgressIndicator();
-                  } else {
-                    final item = items[index];
-                    return getItemView(item);
-                  }
-                },
-                controller: _scrollController,
-              ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: ConfigColor.colorPrimary,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color(0x44000000),
+                            blurRadius: 3.0,
+                            offset: Offset(0.0, 1.0))
+                      ]),
+                  padding: EdgeInsets.only(top: statusBarHeight),
+                  height: tabHeight,
+                  width: double.infinity,
+                  child: TabBar(
+                    isScrollable: true,
+                    indicatorWeight: 2.5,
+                    indicatorColor: ConfigColor.colorContentBackground,
+                    tabs: <Widget>[
+                      getTabItemWidget(0),
+                      getTabItemWidget(1),
+                      getTabItemWidget(2),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ));
@@ -126,7 +147,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget getItemView(Entry entry) {
     return Container(
-        margin: EdgeInsets.only(top: 10.0),
+        margin: EdgeInsets.only(top: 0.0, bottom: 10.0),
         padding: EdgeInsets.only(top: 16.0, right: 16.0, bottom: 4.0),
         decoration: BoxDecoration(
             color: ConfigColor.colorContentBackground,
@@ -143,9 +164,14 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   Container(
                       margin: EdgeInsets.only(left: 16.0),
+                      padding: const EdgeInsets.all(1.0), // borde width
                       child: CircleAvatar(
                         backgroundImage: NetworkImage(entry.user.avatarLarge),
                         backgroundColor: ConfigColor.colorWindowBackground,
+                      ),
+                      decoration: new BoxDecoration(
+                        color: Color(0xffd7dade), // border color
+                        shape: BoxShape.circle,
                       ),
                       width: 24.0,
                       height: 24.0),

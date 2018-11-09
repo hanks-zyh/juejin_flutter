@@ -127,25 +127,22 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget _buildExploreHeader() {
     final List<Model> data = [
+       new Model(
+          imgUrl:
+              'https://user-gold-cdn.xitu.io/2018/11/8/166f3b31f23e06b5?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
       new Model(
           imgUrl:
-              'https://img01.sogoucdn.com/app/a/100520093/60d2f4fe0275d790-007c9f9485c5acfd-bdc6566f9acf5ba2a7e7190734c38920.jpg'),
+              'https://user-gold-cdn.xitu.io/2018/11/6/166e6521376a2858?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
       new Model(
-          imgUrl:
-              'http://img4.duitang.com/uploads/item/201502/27/20150227083741_w5YjR.jpeg'),
-      new Model(
-          imgUrl:
-              'http://img4.duitang.com/uploads/item/201501/06/20150106081248_ae4Rk.jpeg'),
-      new Model(
-          imgUrl: 'http://pic1.win4000.com/wallpaper/a/59322eda4daf0.jpg'),
-      new Model(
-          imgUrl: 'http://uploads.5068.com/allimg/1711/151-1G130093R1.jpg'),
-    ];
+          imgUrl: 'https://user-gold-cdn.xitu.io/2018/11/7/166ee89218c82bc4?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
+        ];
     return Column(
       children: <Widget>[
         BannerWidget(
+          height: 160,
           data: data,
-          curve: ElasticInOutCurve(),
+          curve: Curves.decelerate,
+          duration: 520,
         ),
         Container(
           height: 84.0,

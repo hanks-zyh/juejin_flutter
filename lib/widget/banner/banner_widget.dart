@@ -127,12 +127,12 @@ class BannerState extends State<BannerWidget> {
     List<Widget> children = [];
     for (var i = 0; i < count; i++) {
       children.add(Container(
-        width: 6.0,
-        height: 6.0,
-        margin: EdgeInsets.only(left: 2.0,top: 0.0,right: 2.0,bottom: 0.0),
+        width: position == i ? 16.0: 8.0,
+        height: 2.0,
+        margin: EdgeInsets.only(left: 4.0,top: 0.0,right: 4.0,bottom: 0.0),
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: position == i ? Colors.black38 : Colors.white,
+          shape: BoxShape.rectangle,
+          color: position == i ? Colors.white : Colors.white54,
         ),
       ));
     }

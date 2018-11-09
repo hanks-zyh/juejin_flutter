@@ -56,7 +56,7 @@ class _PinPageState extends State<PinPage> {
     super.initState();
   }
 
-  var tabs = ['首页', 'Android', 'iOS'];
+  var tabs = ['话题', '推荐', '关注'];
 
   Widget getTabItemWidget(int index) {
     return Container(
@@ -71,19 +71,60 @@ class _PinPageState extends State<PinPage> {
   }
 
   var width = 360.0;
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
-
+    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var tabHeight = 40.0 + statusBarHeight;
     return MaterialApp(
         home: DefaultTabController(
       length: tabs.length,
       child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Container(
+          body: Stack(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: tabHeight - 22.0),
+            child: RefreshIndicator(
+              onRefresh: _onRefresh,
+              child: ListView.builder(
+                itemCount: items.length <= 0 ? 0 : items.length + 2,
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return _buildExploreHeader();
+                  } else if (index == items.length + 1) {
+                    return _buildProgressIndicator();
+                  } else {
+                    var i = index - 1;
+                    if (i >= 0 && i < items.length) {
+                      final item = items[i];
+                      return getItemView(item);
+                    } else {
+                      return _buildProgressIndicator();
+                    }
+                  }
+                },
+                controller: _scrollController,
+              ),
+            ),
+          ),
+          Container(
+              decoration: BoxDecoration(
+                  color: ConfigColor.colorPrimary,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color(0x44000000),
+                        blurRadius: 3.0,
+                        offset: Offset(0.0, 1.0))
+                  ]),
+              padding: EdgeInsets.only(top: statusBarHeight),
+              height: tabHeight,
+              width: double.infinity,
+              child: Center(
                 child: TabBar(
                   isScrollable: true,
+                  indicatorWeight: 2.5,
+                  indicatorSize: TabBarIndicatorSize.label,
                   indicatorColor: ConfigColor.colorContentBackground,
                   tabs: <Widget>[
                     getTabItemWidget(0),
@@ -91,33 +132,9 @@ class _PinPageState extends State<PinPage> {
                     getTabItemWidget(2),
                   ],
                 ),
-              ),
-          backgroundColor: ConfigColor.colorPrimary,
-          elevation: 1.0,
-        ),
-        body: RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: ListView.builder(
-            itemCount: items.length <= 0 ? 0 : items.length + 2,
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return _buildExploreHeader();
-              } else if (index == items.length + 1) {
-                return _buildProgressIndicator();
-              } else {
-                var i = index - 1;
-                if (i >= 0 && i < items.length) {
-                  final item = items[i];
-                  return getItemView(item);
-                } else {
-                  return _buildProgressIndicator();
-                }
-              }
-            },
-            controller: _scrollController,
-          ),
-        ),
-      ),
+              )),
+        ],
+      )),
     ));
   }
 
@@ -171,7 +188,8 @@ class _PinPageState extends State<PinPage> {
                         backgroundImage: NetworkImage(pin.user.avatarLarge),
                         backgroundColor: ConfigColor.colorWindowBackground,
                       ),
-                      padding: const EdgeInsets.all(1.0), // borde width
+                      padding: const EdgeInsets.all(1.0),
+                      // borde width
                       decoration: new BoxDecoration(
                         color: Color(0xffd7dade), // border color
                         shape: BoxShape.circle,
@@ -205,6 +223,9 @@ class _PinPageState extends State<PinPage> {
               margin: EdgeInsets.only(top: 0.0, bottom: 8.0),
               child: Text(
                 pin.content,
+                maxLines: 5,
+                overflow: TextOverflow.ellipsis,
+                softWrap: true,
                 style: TextStyle(
                     fontSize: 14.0, color: ConfigColor.colorText1, height: 1.2),
               ),
@@ -307,15 +328,19 @@ class _PinPageState extends State<PinPage> {
       String url, double size, bool marginLeft, bool marginTop) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(),
+        border: Border.all(color: ConfigColor.colorDivider),
+        borderRadius: BorderRadius.all(Radius.circular(3.0)),
       ),
       margin: EdgeInsets.only(
           top: marginTop ? 4.0 : 0.0, left: marginLeft ? 4.0 : 0.0),
       height: size,
       width: size,
-      child: Image.network(
-        url,
-        fit: BoxFit.cover,
+      child: ClipRRect(
+        borderRadius: new BorderRadius.circular(3.0),
+        child: Image.network(
+          url,
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -347,11 +372,15 @@ class _PinPageState extends State<PinPage> {
       return Container(
         margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
         decoration: BoxDecoration(
-          border: Border.all(),
+          border: Border.all(color: ConfigColor.colorDivider),
+          borderRadius: BorderRadius.all(Radius.circular(3.0)),
         ),
-        child: Image.network(
-          pictures[0],
-          fit: BoxFit.cover,
+        child: ClipRRect(
+          borderRadius: new BorderRadius.circular(3.0),
+          child: Image.network(
+            pictures[0],
+            fit: BoxFit.cover,
+          ),
         ),
         width: imgW,
         height: imgH,
@@ -484,7 +513,7 @@ class _PinPageState extends State<PinPage> {
           )
         ],
       );
-    }else if (pictures.length == 9) {
+    } else if (pictures.length == 9) {
       double size = (width - 32 - 8) / 3.0;
       return Column(
         children: <Widget>[

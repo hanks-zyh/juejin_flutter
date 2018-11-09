@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ConfigColor {
-  static bool dark = false;
+  static bool darkTheme = false;
   static ThemeData themeData = new ThemeData.light();
   static Color colorPrimary = Color(0xFF007FFF);
   static Color colorPrimaryDark = Color(0xFF0072E5);

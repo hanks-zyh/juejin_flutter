@@ -3,10 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juejin_flutter/config/config_color.dart';
-import 'package:juejin_flutter/model/entry.dart';
 import 'package:juejin_flutter/model/pin.dart';
 import 'package:juejin_flutter/widget/banner/banner_evalutor.dart';
-import 'package:juejin_flutter/widget/banner/banner_widget.dart';
 
 class PinPage extends StatefulWidget {
   @override
@@ -58,33 +56,42 @@ class _PinPageState extends State<PinPage> {
     super.initState();
   }
 
+  var tabs = ['首页', 'Android', 'iOS'];
+
+  Widget getTabItemWidget(int index) {
+    return Container(
+      height: kToolbarHeight,
+      child: Center(
+        child: Text(
+          tabs[index],
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
+
+  var width = 360.0;
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+
     return MaterialApp(
-      home: Scaffold(
+        home: DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Container(
-            width: double.infinity,
-            height: 36.0,
-            padding: EdgeInsets.only(left: 12.0, right: 12.0),
-            decoration: BoxDecoration(
-                color: Colors.white24,
-                borderRadius: BorderRadius.all(Radius.circular(3.0))),
-            child: Row(children: <Widget>[
-              Icon(
-                Icons.search,
-                color: Colors.white,
-                size: 20.0,
-              ),
-              Container(
-                child: Text(
-                  "搜索",
-                  style: TextStyle(color: Colors.white30, fontSize: 14.0),
+                child: TabBar(
+                  isScrollable: true,
+                  indicatorColor: ConfigColor.colorContentBackground,
+                  tabs: <Widget>[
+                    getTabItemWidget(0),
+                    getTabItemWidget(1),
+                    getTabItemWidget(2),
+                  ],
                 ),
-                margin: EdgeInsets.only(left: 8.0),
-              )
-            ]),
-          ),
+              ),
           backgroundColor: ConfigColor.colorPrimary,
           elevation: 1.0,
         ),
@@ -111,7 +118,7 @@ class _PinPageState extends State<PinPage> {
           ),
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildProgressIndicator() {
@@ -141,12 +148,16 @@ class _PinPageState extends State<PinPage> {
   Widget getItemView(Pin pin) {
     return Container(
         padding:
-            EdgeInsets.only(top: 16.0, right: 16.0, bottom: 16.0, left: 16.0),
+            EdgeInsets.only(top: 8.0, right: 16.0, bottom: 8.0, left: 16.0),
+        margin: EdgeInsets.only(top: 8.0),
         decoration: BoxDecoration(
-          color: ConfigColor.colorContentBackground,
-          border: Border(
-              top: BorderSide(color: ConfigColor.colorDivider, width: 0.5)),
-        ),
+            color: ConfigColor.colorContentBackground,
+            boxShadow: [
+              new BoxShadow(
+                  color: Color(0x18000000),
+                  blurRadius: 1.0,
+                  offset: Offset(0.0, 0.5))
+            ]),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -160,22 +171,38 @@ class _PinPageState extends State<PinPage> {
                         backgroundImage: NetworkImage(pin.user.avatarLarge),
                         backgroundColor: ConfigColor.colorWindowBackground,
                       ),
+                      padding: const EdgeInsets.all(1.0), // borde width
+                      decoration: new BoxDecoration(
+                        color: Color(0xffd7dade), // border color
+                        shape: BoxShape.circle,
+                      ),
                       width: 24.0,
                       height: 24.0),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 8.0),
+                      child: Text(
+                        pin.user.username,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 13.0, color: ConfigColor.colorText2),
+                      ),
+                    ),
+                  ),
                   Container(
                     margin: EdgeInsets.only(left: 8.0),
                     child: Text(
-                      pin.user.username,
+                      "3小时前",
                       maxLines: 1,
                       style: TextStyle(
-                          fontSize: 12.0, color: ConfigColor.colorText2),
+                          fontSize: 10.0, color: ConfigColor.colorText3),
                     ),
                   ),
                 ],
               ),
             ),
             Container(
-              margin: EdgeInsets.only(top: 8.0, bottom: 8.0),
+              margin: EdgeInsets.only(top: 0.0, bottom: 8.0),
               child: Text(
                 pin.content,
                 style: TextStyle(
@@ -210,8 +237,7 @@ class _PinPageState extends State<PinPage> {
                   margin: EdgeInsets.only(left: 4.0),
                   child: Text(likeText,
                       style: TextStyle(
-                          fontSize: 12.0,
-                          color: ConfigColor.colorText3)),
+                          fontSize: 12.0, color: ConfigColor.colorText3)),
                 ),
               ],
             ),
@@ -229,8 +255,7 @@ class _PinPageState extends State<PinPage> {
                   margin: EdgeInsets.only(left: 4.0),
                   child: Text(commentText,
                       style: TextStyle(
-                          fontSize: 12.0,
-                          color: ConfigColor.colorText3)),
+                          fontSize: 12.0, color: ConfigColor.colorText3)),
                 ),
               ],
             ),
@@ -248,22 +273,13 @@ class _PinPageState extends State<PinPage> {
                   margin: EdgeInsets.only(left: 4.0),
                   child: Text("分享",
                       style: TextStyle(
-                          fontSize: 12.0,
-                          color: ConfigColor.colorText3)),
+                          fontSize: 12.0, color: ConfigColor.colorText3)),
                 ),
               ],
             ),
           )
         ],
       ),
-    );
-  }
-  Widget getScreenshotWidget(String url) {
-    if (url == null || url.isEmpty) return Container();
-    return Container(
-      height: 60.0,
-      width: 60.0,
-      child: Image.network(url, fit: BoxFit.cover),
     );
   }
 
@@ -287,18 +303,213 @@ class _PinPageState extends State<PinPage> {
     });
   }
 
+  Widget getImgInGridView(
+      String url, double size, bool marginLeft, bool marginTop) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(),
+      ),
+      margin: EdgeInsets.only(
+          top: marginTop ? 4.0 : 0.0, left: marginLeft ? 4.0 : 0.0),
+      height: size,
+      width: size,
+      child: Image.network(
+        url,
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
   Widget getPicturesWidget(Pin pin) {
     if (pin.pictures == null || pin.pictures.length <= 0) return Container();
     var pictures = pin.pictures;
     if (pictures.length == 1) {
+      var url = pictures[0];
+      var w = 200;
+      var h = 200;
+      try {
+        var wStr = Uri.parse(url).queryParameters['w'];
+        var hStr = Uri.parse(url).queryParameters['h'];
+        w = int.parse(wStr);
+        h = int.parse(hStr);
+      } catch (e) {}
+
+      var imgW = 200.0;
+      var imgH = 200.0;
+      if (w >= h) {
+        imgW = 200.0;
+        imgH = h / w * imgW;
+      } else {
+        imgH = 200.0;
+        imgW = h / w * imgH;
+      }
+
       return Container(
-        margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+        margin: EdgeInsets.only(top: 8.0, bottom: 16.0),
+        decoration: BoxDecoration(
+          border: Border.all(),
+        ),
         child: Image.network(
           pictures[0],
           fit: BoxFit.cover,
         ),
-        width: 200.0,
-        height: 200.0,
+        width: imgW,
+        height: imgH,
+      );
+    }
+    if (pictures.length == 2) {
+      double size = (width - 32 - 4) / 2.0;
+      return Row(
+        children: <Widget>[
+          getImgInGridView(pictures[0], size, false, false),
+          getImgInGridView(pictures[1], size, true, false),
+        ],
+      );
+    } else if (pictures.length == 3) {
+      double size = (width - 32 - 8) / 3.0;
+      return Row(
+        children: <Widget>[
+          getImgInGridView(pictures[0], size, false, false),
+          getImgInGridView(pictures[1], size, true, false),
+          getImgInGridView(pictures[2], size, true, false),
+        ],
+      );
+    } else if (pictures.length == 4) {
+      double size = (width - 32 - 4) / 2.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], size, false, false),
+              getImgInGridView(pictures[1], size, true, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[2], size, false, true),
+              getImgInGridView(pictures[3], size, true, true),
+            ],
+          )
+        ],
+      );
+    } else if (pictures.length == 5) {
+      double size = (width - 32 - 4) / 2.0;
+      double size1 = (width - 32 - 8) / 3.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], size, false, false),
+              getImgInGridView(pictures[1], size, true, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[2], size1, false, true),
+              getImgInGridView(pictures[3], size1, true, true),
+              getImgInGridView(pictures[4], size1, true, true),
+            ],
+          )
+        ],
+      );
+    } else if (pictures.length == 6) {
+      double size = (width - 32 - 8) / 3.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], size, false, false),
+              getImgInGridView(pictures[1], size, true, false),
+              getImgInGridView(pictures[2], size, true, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[3], size, false, true),
+              getImgInGridView(pictures[4], size, true, true),
+              getImgInGridView(pictures[5], size, true, true),
+            ],
+          )
+        ],
+      );
+    } else if (pictures.length == 7) {
+      double size = (width - 32 - 8) / 3.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], width - 32.0, false, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[1], size, false, true),
+              getImgInGridView(pictures[2], size, true, true),
+              getImgInGridView(pictures[3], size, true, true),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[4], size, false, true),
+              getImgInGridView(pictures[5], size, true, true),
+              getImgInGridView(pictures[6], size, true, true),
+            ],
+          )
+        ],
+      );
+    } else if (pictures.length == 8) {
+      double size = (width - 32 - 8) / 3.0;
+      double size1 = (width - 32 - 4) / 2.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], size1, false, false),
+              getImgInGridView(pictures[1], size1, true, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[2], size, false, true),
+              getImgInGridView(pictures[3], size, true, true),
+              getImgInGridView(pictures[4], size, true, true),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[5], size, false, true),
+              getImgInGridView(pictures[6], size, true, true),
+              getImgInGridView(pictures[7], size, true, true),
+            ],
+          )
+        ],
+      );
+    }else if (pictures.length == 9) {
+      double size = (width - 32 - 8) / 3.0;
+      return Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[0], size, false, false),
+              getImgInGridView(pictures[1], size, true, false),
+              getImgInGridView(pictures[2], size, true, false),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[3], size, false, true),
+              getImgInGridView(pictures[4], size, true, true),
+              getImgInGridView(pictures[5], size, true, true),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              getImgInGridView(pictures[6], size, false, true),
+              getImgInGridView(pictures[7], size, true, true),
+              getImgInGridView(pictures[8], size, true, true),
+            ],
+          )
+        ],
       );
     }
     var imageRow = List<Widget>();
@@ -322,17 +533,16 @@ class _PinPageState extends State<PinPage> {
   Widget getTopicWidget(Pin pin) {
     if (pin.topic == null) return Container();
     return Container(
-      height: 28.0,
-      padding: EdgeInsets.only(left: 8.0, right: 8.0),
-      margin: EdgeInsets.only(right: 16.0, bottom: 8.0),
+      padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
+      margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 4.0),
       decoration: BoxDecoration(
-          border: Border.all(color: ConfigColor.colorPrimary, width: 1.0),
-          borderRadius: BorderRadius.all(Radius.circular(20.0))),
+          color: Color(0xffF6F8FA),
+          borderRadius: BorderRadius.all(Radius.circular(4.0))),
       child: Text(
-          pin.topic.title,
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12.0, color: ConfigColor.colorPrimary),
-        ),
+        "# ${pin.topic.title}",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 11.0, color: ConfigColor.colorPrimary),
+      ),
     );
   }
 }

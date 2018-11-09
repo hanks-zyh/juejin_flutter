@@ -232,6 +232,7 @@ class _PinPageState extends State<PinPage> {
               width: double.infinity,
             ),
             getPicturesWidget(pin),
+            getUrlWidget(pin),
             getTopicWidget(pin),
             getBottomWidget(pin),
           ],
@@ -252,7 +253,7 @@ class _PinPageState extends State<PinPage> {
                 Icon(
                   Icons.thumb_up,
                   size: 16.0,
-                  color: ConfigColor.colorText3,
+                  color: Colors.black26,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 4.0),
@@ -270,7 +271,7 @@ class _PinPageState extends State<PinPage> {
                 Icon(
                   Icons.comment,
                   size: 16.0,
-                  color: ConfigColor.colorText3,
+                  color: Colors.black26,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 4.0),
@@ -288,7 +289,7 @@ class _PinPageState extends State<PinPage> {
                 Icon(
                   Icons.share,
                   size: 16.0,
-                  color: ConfigColor.colorText3,
+                  color: Colors.black26,
                 ),
                 Container(
                   margin: EdgeInsets.only(left: 4.0),
@@ -563,7 +564,7 @@ class _PinPageState extends State<PinPage> {
     if (pin.topic == null) return Container();
     return Container(
       padding: EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0, bottom: 4.0),
-      margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 4.0),
+      margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 8.0),
       decoration: BoxDecoration(
           color: Color(0xffF6F8FA),
           borderRadius: BorderRadius.all(Radius.circular(4.0))),
@@ -571,6 +572,57 @@ class _PinPageState extends State<PinPage> {
         "# ${pin.topic.title}",
         textAlign: TextAlign.center,
         style: TextStyle(fontSize: 11.0, color: ConfigColor.colorPrimary),
+      ),
+    );
+  }
+
+  Widget getUrlWidget(Pin pin) {
+    if (pin.url == null || pin.url.isEmpty) return Container();
+    print(pin);
+    var uri = Uri.parse(pin.url);
+    var urlPic = pin.urlPic != null && pin.urlPic.isNotEmpty ? pin.urlPic : "";
+    var urlTitle = pin.urlTitle != null && pin.urlTitle.isNotEmpty ? pin.urlTitle : "网页链接";
+    return Container(
+      padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 8.0, bottom:8.0),
+      margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 8.0),
+      decoration: BoxDecoration(
+          color: Color(0xffF6F8FA),
+          borderRadius: BorderRadius.all(Radius.circular(4.0))),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  urlTitle,
+                  style:
+                      TextStyle(color: ConfigColor.colorText1, fontSize: 16.0),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 8.0),
+                  child:  Text(
+                    uri.host,
+                    style:
+                    TextStyle(color: ConfigColor.colorText3, fontSize: 12.0),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          Container(
+            height: 64.0,
+            width: 64.0,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(3.0),
+              child: Image.network(
+                urlPic,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

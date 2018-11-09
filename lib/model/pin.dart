@@ -38,4 +38,10 @@ class Pin {
     pin.topic = Topic.fromJson(json['topic']);
     return pin;
   }
+
+  @override
+  String toString() {
+    return 'Pin{commentCount: $commentCount, likedCount: $likedCount, isLiked: $isLiked, objectId: $objectId, title: $title, content: $content, url: $url, urlTitle: $urlTitle, urlPic: $urlPic, pictures: $pictures, createdAt: $createdAt, user: $user, topic: $topic}';
+  }
+
 }

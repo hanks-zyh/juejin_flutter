@@ -37,7 +37,11 @@ class XiaocePage extends StatefulWidget {
   }
 }
 
-class _XiaocePageState extends State<XiaocePage> {
+class _XiaocePageState extends State<XiaocePage>  with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
   List<Xiaoce> items = List<Xiaoce>();
   ScrollController _scrollController = ScrollController();
 

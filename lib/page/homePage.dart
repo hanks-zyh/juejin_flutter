@@ -36,7 +36,11 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
   List<Entry> items = List<Entry>();
   ScrollController _scrollController = ScrollController();
 

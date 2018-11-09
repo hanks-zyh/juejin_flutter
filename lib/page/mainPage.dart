@@ -26,6 +26,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
    * 存放三个页面，跟fragmentList一样
    */
   var _pageList;
+  var pageController;
 
   /*
    * 根据选择获得对应的normal或是press的icon
@@ -95,6 +96,8 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
       new XiaocePage(),
       new UserPage(),
     ];
+
+    pageController = PageController(initialPage: _tabIndex);
   }
 
   Widget getBottomIcon(var index) {
@@ -106,6 +109,7 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
               setState(() {
                 _tabIndex = index;
               });
+              pageController.jumpToPage(_tabIndex);
             },
             child: getTabIcon(index)),
       ),
@@ -119,29 +123,39 @@ class _MainPageState extends State<MainPage> with TickerProviderStateMixin {
     initData();
 
     return Scaffold(
-        body: Column(
-          children: <Widget>[
-            Expanded(
-              child: _pageList[_tabIndex],
-              flex: 1,
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: PageView(
+              controller: pageController,
+              physics: NeverScrollableScrollPhysics(),
+              children: <Widget>[
+                _pageList[0],
+                _pageList[1],
+                _pageList[2],
+                _pageList[3],
+                _pageList[4],
+              ],
             ),
-            Container(
-              decoration: BoxDecoration(
-                  color: ConfigColor.colorContentBackground,
-                  boxShadow: [
-                    new BoxShadow(color: Color(0x18000000), blurRadius: 3.0)
-                  ]),
-              height: 48.0,
-              child: Row(children: <Widget>[
-                getBottomIcon(0),
-                getBottomIcon(1),
-                getBottomIcon(2),
-                getBottomIcon(3),
-                getBottomIcon(4),
-              ]),
-            ),
-          ],
-        ),
+            flex: 1,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: ConfigColor.colorContentBackground,
+                boxShadow: [
+                  new BoxShadow(color: Color(0x18000000), blurRadius: 3.0)
+                ]),
+            height: 48.0,
+            child: Row(children: <Widget>[
+              getBottomIcon(0),
+              getBottomIcon(1),
+              getBottomIcon(2),
+              getBottomIcon(3),
+              getBottomIcon(4),
+            ]),
+          ),
+        ],
+      ),
     );
   }
 }

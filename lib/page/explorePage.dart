@@ -38,7 +38,11 @@ class ExplorePage extends StatefulWidget {
   }
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
   List<Entry> items = List<Entry>();
   ScrollController _scrollController = ScrollController();
 

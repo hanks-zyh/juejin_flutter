@@ -13,7 +13,7 @@ class PinPage extends StatefulWidget {
   }
 }
 
-class _PinPageState extends State<PinPage> {
+class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
   List<Pin> items = List<Pin>();
   ScrollController _scrollController = ScrollController();
   var before = "";
@@ -626,6 +626,9 @@ class _PinPageState extends State<PinPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class Model extends Object with BannerWithEval {

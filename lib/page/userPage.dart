@@ -1,7 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:juejin_flutter/config/config_color.dart';
 
-class UserPage extends StatelessWidget {
+class UserPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _UserPage();
+  }
+}
+
+class _UserPage extends State<UserPage> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -1,7 +1,7 @@
 class Topic {
   int msgsCount;
-  int    followersCount;
-  int    attendersCount;
+  int followersCount;
+  int attendersCount;
   String icon;
   String description;
   String title;
@@ -13,6 +13,7 @@ class Topic {
   Topic();
 
   factory Topic.fromJson(Map<String, dynamic> json) {
+    if (json == null) return null;
     var topic = Topic();
     topic.objectId = json['objectId'];
     topic.msgsCount = json['msgsCount'];

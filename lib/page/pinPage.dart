@@ -13,7 +13,7 @@ class PinPage extends StatefulWidget {
   }
 }
 
-class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
+class _PinPageState extends State<PinPage> with AutomaticKeepAliveClientMixin {
   List<Pin> items = List<Pin>();
   ScrollController _scrollController = ScrollController();
   var before = "";
@@ -338,12 +338,18 @@ class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
       width: size,
       child: ClipRRect(
         borderRadius: new BorderRadius.circular(3.0),
-        child: Image.network(
-          url,
-          fit: BoxFit.cover,
-        ),
+        child: getNetworkImage(url),
       ),
     );
+  }
+
+  Widget getNetworkImage(String url){
+    try {
+     return FadeInImage.assetNetwork(placeholder: "assets/loading.png", image: url, fit: BoxFit.cover,);
+    } catch (e) {
+      print(e);
+      return Image.asset("assets/loading.png");
+    }
   }
 
   Widget getPicturesWidget(Pin pin) {
@@ -367,7 +373,7 @@ class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
         imgH = h / w * imgW;
       } else {
         imgH = 200.0;
-        imgW = h / w * imgH;
+        imgW = w * imgH /h;
       }
 
       return Container(
@@ -377,12 +383,8 @@ class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
           borderRadius: BorderRadius.all(Radius.circular(3.0)),
         ),
         child: ClipRRect(
-          borderRadius: new BorderRadius.circular(3.0),
-          child: Image.network(
-            pictures[0],
-            fit: BoxFit.cover,
-          ),
-        ),
+            borderRadius: new BorderRadius.circular(3.0),
+            child: getNetworkImage(pictures[0])),
         width: imgW,
         height: imgH,
       );
@@ -581,9 +583,10 @@ class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
     print(pin);
     var uri = Uri.parse(pin.url);
     var urlPic = pin.urlPic != null && pin.urlPic.isNotEmpty ? pin.urlPic : "";
-    var urlTitle = pin.urlTitle != null && pin.urlTitle.isNotEmpty ? pin.urlTitle : "网页链接";
+    var urlTitle =
+        pin.urlTitle != null && pin.urlTitle.isNotEmpty ? pin.urlTitle : "网页链接";
     return Container(
-      padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 8.0, bottom:8.0),
+      padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 8.0, bottom: 8.0),
       margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 8.0),
       decoration: BoxDecoration(
           color: Color(0xffF6F8FA),
@@ -601,13 +604,12 @@ class _PinPageState extends State<PinPage>  with AutomaticKeepAliveClientMixin {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: 8.0),
-                  child:  Text(
+                  child: Text(
                     uri.host,
-                    style:
-                    TextStyle(color: ConfigColor.colorText3, fontSize: 12.0),
+                    style: TextStyle(
+                        color: ConfigColor.colorText3, fontSize: 12.0),
                   ),
                 ),
-
               ],
             ),
           ),

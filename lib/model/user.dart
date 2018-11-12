@@ -7,6 +7,7 @@ class User {
   User();
 
   factory User.fromJson(Map<String, dynamic> jsonUser) {
+    if (jsonUser == null) return null;
     var user = User();
     user.objectId = jsonUser['objectId'];
     user.avatarLarge = jsonUser['avatarLarge'];

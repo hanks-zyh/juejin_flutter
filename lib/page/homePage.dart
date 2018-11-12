@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juejin_flutter/config/config_color.dart';
 import 'package:juejin_flutter/model/entry.dart';
+import 'package:juejin_flutter/page/webpage.dart';
 
 Future<List<Entry>> fetchPost() async {
   final response = await http.get(
@@ -36,8 +37,8 @@ class HomePage extends StatefulWidget {
   }
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
-
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -73,7 +74,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   Widget build(BuildContext context) {
-    var statusBarHeight = MediaQuery.of(context).padding.top;
+    var statusBarHeight = MediaQuery
+        .of(context)
+        .padding
+        .top;
     var tabHeight = 40.0 + statusBarHeight;
     return MaterialApp(
         title: "Home",
@@ -149,111 +153,154 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     _scrollController.dispose();
   }
 
+  /// 创建一个平移变换
+  /// 跳转过去查看源代码，可以看到有各种各样定义好的变换
+   SlideTransition createTransition(
+      Animation<double> animation, Widget child) {
+    return new SlideTransition(
+      position: new Tween<Offset>(
+        begin: const Offset(1.0, 0.0),
+        end: const Offset(0.0, 0.0),
+      ).animate(animation),
+      child: child, // child is the value returned by pageBuilder
+    );
+  }
+
   Widget getItemView(Entry entry) {
-    return Container(
-        margin: EdgeInsets.only(top: 0.0, bottom: 10.0),
-        padding: EdgeInsets.only(top: 16.0, right: 16.0, bottom: 4.0),
-        decoration: BoxDecoration(
-            color: ConfigColor.colorContentBackground,
-            boxShadow: [
-              new BoxShadow(
-                  color: Color(0x18000000),
-                  blurRadius: 1.0,
-                  offset: Offset(0.0, 0.5))
-            ]),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Row(
+    return InkWell(
+        onTap: () {
+
+//          Navigator.of(context).push(new PageRouteBuilder(pageBuilder:
+//              (BuildContext context, Animation<double> animation,
+//              Animation<double> secondaryAnimation) {
+//            return WebPage(url:entry.originalUrl);
+//          }, transitionsBuilder: (
+//              BuildContext context,
+//              Animation<double> animation,
+//              Animation<double> secondaryAnimation,
+//              Widget child,
+//              ) {
+//            // 添加一个平移动画
+//            return createTransition(animation, child);
+//          }));
+
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => WebPage(url:entry.originalUrl)));
+        },
+        child: Container(
+            margin: EdgeInsets.only(top: 0.0, bottom: 10.0),
+            child: Ink(
+              padding: EdgeInsets.only(top: 16.0, right: 16.0, bottom: 4.0),
+              decoration: BoxDecoration(
+                  color: ConfigColor.colorContentBackground,
+                  boxShadow: [
+                    new BoxShadow(
+                        color: Color(0x18000000),
+                        blurRadius: 1.0,
+                        offset: Offset(0.0, 0.5))
+                  ]),
+              child:
+            Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Row(
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(left: 16.0),
+                          padding: const EdgeInsets.all(1.0),
+                          // borde width
+                          child: CircleAvatar(
+                            backgroundImage:
+                            NetworkImage(entry.user.avatarLarge),
+                            backgroundColor: ConfigColor.colorWindowBackground,
+                          ),
+                          decoration: new BoxDecoration(
+                            color: Color(0xffd7dade), // border color
+                            shape: BoxShape.circle,
+                          ),
+                          width: 24.0,
+                          height: 24.0),
+                      Expanded(
+                        child: Container(
+                          child: Text(
+                            entry.user.username,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontSize: 12.0, color: ConfigColor.colorText1),
+                          ),
+                          margin: EdgeInsets.only(left: 8.0),
+                        ),
+                      ),
+                      getTagWidget(entry),
+                    ],
+                  ),
                   Container(
-                      margin: EdgeInsets.only(left: 16.0),
-                      padding: const EdgeInsets.all(1.0), // borde width
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(entry.user.avatarLarge),
-                        backgroundColor: ConfigColor.colorWindowBackground,
-                      ),
-                      decoration: new BoxDecoration(
-                        color: Color(0xffd7dade), // border color
-                        shape: BoxShape.circle,
-                      ),
-                      width: 24.0,
-                      height: 24.0),
-                  Expanded(
-                    child: Container(
-                      child: Text(
-                        entry.user.username,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 12.0, color: ConfigColor.colorText1),
-                      ),
-                      margin: EdgeInsets.only(left: 8.0),
+                    child: Text(
+                      entry.title.toUpperCase(),
+                      maxLines: 2,
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                          color: ConfigColor.colorText1),
                     ),
+                    padding: EdgeInsets.only(top: 8.0, left: 16.0),
                   ),
-                  getTagWidget(entry),
-                ],
-              ),
-              Container(
-                child: Text(
-                  entry.title.toUpperCase(),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                      color: ConfigColor.colorText1),
-                ),
-                padding: EdgeInsets.only(top: 8.0, left: 16.0),
-              ),
-              Container(
-                child: Text(
-                  entry.content.trim(),
-                  maxLines: 3,
-                  style: TextStyle(
-                      fontSize: 12.0,
-                      color: ConfigColor.colorText2,
-                      height: 1.2),
-                ),
-                padding: EdgeInsets.only(top: 4.0, left: 16.0),
-              ),
-              Container(
-                child: Row(children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(right: 4.0, left: 16.0),
-                        child: Image.asset("assets/timeline_like_normal.png",
-                            width: 16.0, height: 16.0),
-                      ),
-                      Container(
-                        child: Text(
-                          "${entry.collectionCount}",
-                          style: TextStyle(
-                              fontSize: 12.0, color: ConfigColor.colorText3),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    child: Text(
+                      entry.content.trim(),
+                      maxLines: 3,
+                      style: TextStyle(
+                          fontSize: 12.0,
+                          color: ConfigColor.colorText2,
+                          height: 1.2),
+                    ),
+                    padding: EdgeInsets.only(top: 4.0, left: 16.0),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.only(right: 4.0, left: 16.0),
-                        child: Image.asset("assets/timeline_comment.png",
-                            width: 16.0, height: 16.0),
+                  Container(
+                    child: Row(children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(right: 4.0, left: 16.0),
+                            child: Image.asset(
+                                "assets/timeline_like_normal.png",
+                                width: 16.0,
+                                height: 16.0),
+                          ),
+                          Container(
+                            child: Text(
+                              "${entry.collectionCount}",
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: ConfigColor.colorText3),
+                            ),
+                          ),
+                        ],
                       ),
-                      Container(
-                        child: Text(
-                          "${entry.commentsCount}",
-                          style: TextStyle(
-                              fontSize: 12.0, color: ConfigColor.colorText3),
-                        ),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(right: 4.0, left: 16.0),
+                            child: Image.asset("assets/timeline_comment.png",
+                                width: 16.0, height: 16.0),
+                          ),
+                          Container(
+                            child: Text(
+                              "${entry.commentsCount}",
+                              style: TextStyle(
+                                  fontSize: 12.0,
+                                  color: ConfigColor.colorText3),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ]),
+                    height: 40.0,
+                  )
                 ]),
-                height: 40.0,
-              )
-            ]));
+            )
+        ));
   }
 
   Future<Null> _onRefresh() async {

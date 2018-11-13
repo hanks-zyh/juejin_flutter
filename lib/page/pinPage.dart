@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juejin_flutter/config/config_color.dart';
 import 'package:juejin_flutter/model/pin.dart';
+import 'package:juejin_flutter/page/picturePage.dart';
 import 'package:juejin_flutter/widget/banner/banner_evalutor.dart';
 
 class PinPage extends StatefulWidget {
@@ -343,9 +344,21 @@ class _PinPageState extends State<PinPage> with AutomaticKeepAliveClientMixin {
     );
   }
 
-  Widget getNetworkImage(String url){
+  Widget getNetworkImage(String url) {
     try {
-     return FadeInImage.assetNetwork(placeholder: "assets/loading.png", image: url, fit: BoxFit.cover,);
+      return InkWell(
+        child: Hero(
+            tag: "img",
+            child: FadeInImage.assetNetwork(
+              placeholder: "assets/loading.png",
+              image: url,
+              fit: BoxFit.cover,
+            )),
+        onTap: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PicturePage(url: url)));
+        },
+      );
     } catch (e) {
       print(e);
       return Image.asset("assets/loading.png");
@@ -373,7 +386,10 @@ class _PinPageState extends State<PinPage> with AutomaticKeepAliveClientMixin {
         imgH = h / w * imgW;
       } else {
         imgH = 200.0;
-        imgW = w * imgH /h;
+        imgW = w * imgH / h;
+      }
+      if (imgH == 200.0 && imgW <= 140.0) {
+        imgW = 140.0;
       }
 
       return Container(
@@ -586,24 +602,27 @@ class _PinPageState extends State<PinPage> with AutomaticKeepAliveClientMixin {
     var urlTitle =
         pin.urlTitle != null && pin.urlTitle.isNotEmpty ? pin.urlTitle : "网页链接";
     return Container(
+      height: 80.0,
       padding: EdgeInsets.only(left: 12.0, right: 8.0, top: 8.0, bottom: 8.0),
       margin: EdgeInsets.only(right: 16.0, bottom: 8.0, top: 8.0),
       decoration: BoxDecoration(
           color: Color(0xffF6F8FA),
           borderRadius: BorderRadius.all(Radius.circular(4.0))),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text(
                   urlTitle,
                   style:
-                      TextStyle(color: ConfigColor.colorText1, fontSize: 16.0),
+                      TextStyle(color: ConfigColor.colorText1, fontSize: 14.0),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 8.0),
+                  margin: EdgeInsets.only(bottom: 4.0),
                   child: Text(
                     uri.host,
                     style: TextStyle(

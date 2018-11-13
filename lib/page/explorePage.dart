@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:juejin_flutter/config/config_color.dart';
 import 'package:juejin_flutter/model/entry.dart';
+import 'package:juejin_flutter/page/webpage.dart';
 import 'package:juejin_flutter/widget/banner/banner_evalutor.dart';
 import 'package:juejin_flutter/widget/banner/banner_widget.dart';
 
@@ -38,8 +39,8 @@ class ExplorePage extends StatefulWidget {
   }
 }
 
-class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClientMixin {
-
+class _ExplorePageState extends State<ExplorePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -100,10 +101,10 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
                 return _buildProgressIndicator();
               } else {
                 var i = index - 1;
-                if(i>=0 && i < items.length){
+                if (i >= 0 && i < items.length) {
                   final item = items[i];
                   return getItemView(item);
-                }else{
+                } else {
                   return _buildProgressIndicator();
                 }
               }
@@ -131,15 +132,16 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
 
   Widget _buildExploreHeader() {
     final List<Model> data = [
-       new Model(
+      new Model(
           imgUrl:
               'https://user-gold-cdn.xitu.io/2018/11/8/166f3b31f23e06b5?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
       new Model(
           imgUrl:
               'https://user-gold-cdn.xitu.io/2018/11/6/166e6521376a2858?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
       new Model(
-          imgUrl: 'https://user-gold-cdn.xitu.io/2018/11/7/166ee89218c82bc4?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
-        ];
+          imgUrl:
+              'https://user-gold-cdn.xitu.io/2018/11/7/166ee89218c82bc4?imageView2/1/w/1304/h/734/q/85/format/webp/interlace/1'),
+    ];
     return Column(
       children: <Widget>[
         BannerWidget(
@@ -257,48 +259,53 @@ class _ExplorePageState extends State<ExplorePage> with AutomaticKeepAliveClient
   }
 
   Widget getItemView(Entry entry) {
-    return Container(
-        padding:
-            EdgeInsets.only(top: 16.0, right: 16.0, bottom: 16.0, left: 16.0),
-        decoration: BoxDecoration(
-          color: ConfigColor.colorContentBackground,
-          border: Border(
-              top: BorderSide(color: ConfigColor.colorDivider, width: 0.5)),
-        ),
-        child: Row(children: <Widget>[
-          Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(right: 16.0),
-                child: Text(
-                  entry.title.toUpperCase(),
-                  maxLines: 2,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: 14.0,
-                      height: 1.1,
-                      color: ConfigColor.colorText1),
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_)=> WebPage(url: entry.originalUrl,)));
+      },
+      child: Container(
+          padding:
+              EdgeInsets.only(top: 16.0, right: 16.0, bottom: 16.0, left: 16.0),
+          decoration: BoxDecoration(
+            color: ConfigColor.colorContentBackground,
+            border: Border(
+                top: BorderSide(color: ConfigColor.colorDivider, width: 0.5)),
+          ),
+          child: Row(children: <Widget>[
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(right: 16.0),
+                  child: Text(
+                    entry.title.toUpperCase(),
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                        fontSize: 14.0,
+                        height: 1.1,
+                        color: ConfigColor.colorText1),
+                  ),
                 ),
-              ),
-              Container(
-                child: Text(
-                  entry.user.username,
-                  maxLines: 1,
-                  style:
-                      TextStyle(fontSize: 10.0, color: ConfigColor.colorText2),
+                Container(
+                  child: Text(
+                    entry.user.username,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 10.0, color: ConfigColor.colorText2),
+                  ),
+                  margin: EdgeInsets.only(top: 8.0),
                 ),
-                margin: EdgeInsets.only(top: 8.0),
-              ),
-            ],
-          )),
-          getScreenshotWidget(entry.screenshot)
-        ]));
+              ],
+            )),
+            getScreenshotWidget(entry.screenshot)
+          ])),
+    );
   }
 
-  Widget getScreenshotWidget(String url){
-    if(url == null || url.isEmpty) return Container();
+  Widget getScreenshotWidget(String url) {
+    if (url == null || url.isEmpty) return Container();
     return Container(
       height: 60.0,
       width: 60.0,

@@ -24,9 +24,21 @@ class _WebPageState extends State<WebPage> {
       body: WebviewScaffold(
         url: url,
         appBar: new AppBar(
-          backgroundColor: ConfigColor.colorPrimary,
+          iconTheme: IconThemeData(color: ConfigColor.colorText1),
+          backgroundColor: ConfigColor.colorContentBackground,
           elevation: 2.0,
-          title: new Text("Widget webview"),
+          title: new Text(
+            "文章详情页",
+            style: TextStyle(color: ConfigColor.colorText1),
+          ),
+          actions: <Widget>[
+            Container(
+              child: Icon(
+                Icons.more_horiz,
+              ),
+              margin: EdgeInsets.all(8.0),
+            )
+          ],
         ),
       ),
     );

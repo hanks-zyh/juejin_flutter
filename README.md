@@ -1,8 +1,10 @@
 # juejin_flutter
 
 juejin client power by flutter 
-使用 Flutter 仿写的掘金客户端
+使用 Flutter 仿写的掘金客户端，自定义了9宫格图片布局
 
+[APK Download](https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/demo.apk)
+<img width="200px" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/qr.png" >
 ## 截图
 
 <div style="width:1000px;display:flex;" >

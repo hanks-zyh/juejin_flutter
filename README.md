@@ -1,8 +1,18 @@
 # juejin_flutter
 
-使用 Flutter 仿写的掘金客户端
 juejin client power by flutter 
+使用 Flutter 仿写的掘金客户端
 
+## 截图
+
+<div style="width:1000px;display:flex;" >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/1.png" >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/2.png" >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/3.png" >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/4.png"  >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/5.png"  >
+ <img width="30%" src="https://raw.githubusercontent.com/hanks-zyh/juejin_flutter/master/screenshots/demo.gif"  >
+ </div>
 
 ## 总结
 
